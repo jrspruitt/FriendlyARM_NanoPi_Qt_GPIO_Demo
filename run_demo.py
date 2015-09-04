@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #############################################################################
 # The MIT License (MIT)
 # 
@@ -22,7 +23,6 @@
 # THE SOFTWARE.
 #############################################################################
 
-#!/usr/bin/env python
 import sys
 import threading
 from time import sleep
@@ -221,3 +221,4 @@ if __name__ == '__main__':
     d = Demo()
     d.show()
     sys.exit(app.exec_())
+
