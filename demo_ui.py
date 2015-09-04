@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/jason/Projects/QtNanoGPIODemo/demo_ui.ui'
+# Form implementation generated from reading ui file 'demo_ui.ui'
 #
 # Created: Thu Sep  3 23:25:12 2015
 #      by: PyQt4 UI code generator 4.11.3
