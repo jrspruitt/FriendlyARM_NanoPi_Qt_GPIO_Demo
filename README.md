@@ -17,7 +17,11 @@ Tabs for LEDs/Buttons, Dimmer and Servo.
 
 **Caution:** Don't hook LEDs up directly, use a transistor. Take proper care on all pin connections.
 
-The PWM outputs share the prescaler value, when switching tabs between Dimmer and Servo, the deselected one will shut off.
+The PWM outputs share the prescaler value, when switching tabs between Dimmer and Servo, the deselected one will stop.
+
+Buttons should pull the line high.
+
+LEDs should trigger on line high.
 
 **Pin out:**
 
