@@ -7,7 +7,8 @@ Built for Qt 4.8
  * Install [pyfa_gpio](https://github.com/jrspruitt/pyfa_gpio)
      * Will need to change imports if not installed to system.
 
-##Run## 
+###Run###
+
     ./run_demo.py -qws
 
 Tabs for LEDs/Buttons, Dimmer and Servo.
