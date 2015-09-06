@@ -46,8 +46,13 @@ class Demo(QMainWindow, Ui_MainWindow):
         self._init_events()
         self._g = GPIO(Config())
         self._init_buttons()
-        self._init_pwms()
         self._init_leds()
+        self._pin_servo = 26
+        self._servo_dc = 50
+        self._pin_dimmer = 22
+        self._dimmer_dc = 50
+        self._g.pwm_init(self._pin_servo, 20000000, 1500000)
+        self._g.pwm_init(self._pin_dimmer, 1000000, 500000)
 
     def _exit(self):
         self._close_servo()
@@ -70,19 +75,14 @@ class Demo(QMainWindow, Ui_MainWindow):
             pass
         elif index == 1:
             self._g.pwm_stop(self._pin_servo)
-            # Setting period in nanoseconds takes too long
-            # and crashed PyQt and touchscreen with it so
-            # so we set the counter directly.
-            self._g.pwm_counter(self._pin_dimmer, self._dim_cnt)
-            self.dial_dimmer.setValue(self._last_dim)
-            self._g.pwm_start(self._pin_dimmer)
+            self._init_dimmer()
+            self.dial_dimmer.setValue(self._dimmer_dc)
 
         elif index == 2:
             self._g.pwm_stop(self._pin_dimmer)
             # See above comment about setting period in ns.
-            self._g.pwm_counter(self._pin_servo, self._srv_cnt)
-            self.dial_servo.setValue(self._last_srv)
-            self._g.pwm_start(self._pin_servo)
+            self._init_servo()
+            self.dial_servo.setValue(self._servo_dc)
 
     def _init_leds(self):
         self._toggling = False
@@ -122,10 +122,9 @@ class Demo(QMainWindow, Ui_MainWindow):
 
     def _close_leds(self):
         self._toggling = False
-        sleep(1)
+        sleep(.2)
         self._g.gpio_close(self._l1)
         self._g.gpio_close(self._l2)
-        
 
     def _init_buttons(self):
         self._button_running = True
@@ -156,23 +155,11 @@ class Demo(QMainWindow, Ui_MainWindow):
 
     def _close_buttons(self):
         self._button_running = False
-        sleep(.1)
-
-    def _init_pwms(self):
-        self._pin_servo = 26
-        self._pin_dimmer = 22
-        self._init_dimmer()
-        self._g.pwm_period(self._pin_dimmer, 1000000)
-        self._dim_cnt = self._g.pwm_get_counter(self._pin_dimmer)
-        self._last_dim = 50
-        self._init_servo()
-        self._g.pwm_period(self._pin_servo, 20000000)
-        self._srv_cnt = self._g.pwm_get_counter(self._pin_servo)
-        self._last_srv = 50
+        sleep(.2)
 
     def _init_dimmer(self):
         self.dial_dimmer.setEnabled(True)
-        self._g.pwm_init(self._pin_dimmer, 1000000, 500000)
+        self._g.pwm_period(self._pin_dimmer, 1000000)
         self._g.pwm_start(self._pin_dimmer)
 
     def _close_dimmer(self):
@@ -190,12 +177,12 @@ class Demo(QMainWindow, Ui_MainWindow):
         if new_dc > max_dc:
             new_dc = max_dc
 
-        self._last_dim = value
+        self._dimmer_dc = value
         self._g.pwm_duty_cycle(self._pin_dimmer, new_dc)
 
     def _init_servo(self):
         self.dial_servo.setEnabled(True)
-        self._g.pwm_init(self._pin_servo, 20000000, 1500000)
+        self._g.pwm_period(self._pin_servo, 20000000)
         self._g.pwm_start(self._pin_servo)
 
     def _close_servo(self):
@@ -213,7 +200,7 @@ class Demo(QMainWindow, Ui_MainWindow):
         if new_dc > max_dc:
             new_dc = max_dc
 
-        self._last_srv = value
+        self._servo_dc = value
         self._g.pwm_duty_cycle(self._pin_servo, new_dc)
 
 if __name__ == '__main__':
